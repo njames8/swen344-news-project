@@ -5,6 +5,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0",
     "bootstrap4": "0.0.1-security",
+    "jquery": "^3.3.1",
     "popper.js": "^1.14.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
