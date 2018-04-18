@@ -1,22 +1,26 @@
 import React, {Component} from 'react';
-import 'bootstrap';
+import Favorite from './Favorite';
+
 class Headline extends Component {
 
     render() {
         let that = this;
         return (
-            <div class="mx-auto p-1 w-50 rounded">
-                <a href={that.props.url}>
-                    <div className="Headline" class="media border">
-                        <div class="p-2 mw-25 mh-25">
-                            <img class="img-thumbnail" width="64" height="64" src={that.props.image}/>
+            <div className="mx-auto p-1 w-50 rounded">
+                <div className="headline media border">
+                    <a href={that.props.url}>
+                        <div className="media-body py-2 px-3 my-auto float-left">
+                            <img className="img-thumbnail" width="64" height="64" src={that.props.image}/>
                         </div>
-                        <div class="media-body">
-                            <h6 class="mt-0">{that.props.title}</h6>
-                            <small class="text-muted">{that.props.description}</small>
+                        <div className="media-body mx-auto py-1">
+                            <h6 className="mt-0">{that.props.title}</h6>
+                            <small className="text-muted">{that.props.description}</small>
                         </div>
+                    </a>
+                    <div className="media-body my-auto pr-2">
+                        <Favorite headline={that.props} />
                     </div>
-                </a>
+                </div>
             </div>
         );
     }
