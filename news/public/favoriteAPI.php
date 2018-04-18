@@ -11,12 +11,12 @@ function storeStuff($title, $description, $url, $image, $pubDate, $isFavorite)
     );
     $fName = "favorites.json";
     $prevContents = file_get_contents($fName);
-    $jsonContents = json_decode($prevContents);
+    $jsonContents = json_decode($prevContents, true);
                 if (is_null($jsonContents) || empty($jsonContents)) {
                         $jsonContents = array();
                 }
     array_push($jsonContents, $info);
-    $newJson = json_encode($jsonContents);
+    $newJson = json_encode(array_values($jsonContents));
     file_put_contents($fName, $newJson);
     return $newJson;
 }
@@ -31,7 +31,7 @@ function removeStuff($title, $description, $url, $image, $pubDate)
         unset($jsonContents[$key]);
        }
     }
-    $newJson = json_encode($jsonContents);
+    $newJson = json_encode(array_values($jsonContents));
     file_put_contents($fName, $newJson);
     return $newJson;
 }

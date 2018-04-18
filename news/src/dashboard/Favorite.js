@@ -8,26 +8,10 @@ class Favorite extends Component {
     constructor(props) {
         super(props);
         this.toggleFavorite = this.toggleFavorite.bind(this);
-        const isFav = props.headline.isFavorite === 'true' || props.headline.isFavorite === true;
-        this.state = {isFavorite: isFav};
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return nextProps.headline.isFavorite !== this.state.isFavorite;
-    }
-
-    componentWillUpdate() {
-        const propsIsFavorite = this.props.headline.isFavorite;
-        const isFavorite = propsIsFavorite === 'true' || propsIsFavorite === true;
-        if (this.state.isFavorite !== isFavorite) {
-            this.setState({
-                'isFavorite': isFavorite
-            });
-        }
     }
 
     toggleFavorite() {
-        const isNewFavorite = !this.state.isFavorite;
+        const isNewFavorite = !this.props.headline.isFavorite;
         const that = this;
         if (isNewFavorite) {
             $.ajax({
@@ -47,8 +31,8 @@ class Favorite extends Component {
                     console.log("status: " + status);
                     console.log("error: " + error);
                 },
-                success: function () {
-                    that.setState({isFavorite: !that.state.isFavorite})
+                success: function (response) {
+                    that.props.headline.setFavorites(JSON.parse(response));
                 }
             });
         } else {
@@ -68,8 +52,8 @@ class Favorite extends Component {
                     console.log("status: " + status);
                     console.log("error: " + error);
                 },
-                success: function () {
-                    that.setState({isFavorite: !that.state.isFavorite})
+                success: function (response) {
+                    that.props.headline.setFavorites(JSON.parse(response));
                 }
             });
         }
@@ -78,7 +62,7 @@ class Favorite extends Component {
 
     render() {
         let that = this;
-        if (this.state && this.state.isFavorite === true) {
+        if (this.props.headline.isFavorite === true) {
             return (
                 <span className='favorite fa fa-star fa-2x my-auto' aria-hidden="true" onClick={that.toggleFavorite}/>
             );

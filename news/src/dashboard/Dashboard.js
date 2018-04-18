@@ -17,6 +17,7 @@ class Dashboard extends Component {
         this.getAllData = this.getAllData.bind(this);
         this.setData = this.setData.bind(this);
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
+        this.setFavorites = this.setFavorites.bind(this);
         this.state = {
             showEspn1: true,
             showEspn2: true,
@@ -49,29 +50,45 @@ class Dashboard extends Component {
             url: "favorites.json",
             dataType: 'json',
             success: function (response) {
+                let favs = response.map(function (i) {
+                    const j = Object.assign({}, i);
+                    j['isFavorite'] = i.isFavorite === 'true';
+                    return j;
+                });
                 that.setState({
-                    favorites: response
+                    favorites: favs
                 });
             },
             error: function () {
                 console.log("Could not update favorites");
             }
         })
+    }
 
-
+    setFavorites(data) {
+        let favs = data.map(function (i) {
+            const j = Object.assign({}, i);
+            j['isFavorite'] = i.isFavorite === 'true';
+            return j;
+        });
+        this.setState({
+            favorites: favs
+        });
     }
 
     componentDidUpdate() {
         this.getAllData();
     }
 
-    createHeadline(headline) {
+    createHeadline(headline, i) {
         return <Headline url={headline.url}
                          image={headline.image}
                          title={headline.title}
                          description={headline.description}
                          isFavorite={headline.isFavorite}
                          pubDate={headline.pubDate}
+                         key={i}
+                         setFavorites={this.setFavorites}
         />
     }
 
@@ -129,6 +146,10 @@ class Dashboard extends Component {
             data = data.concat(this.state.espn4);
         }
 
+        data.forEach(function (d) {
+            d['isFavorite'] = false;
+        });
+
         const favorites = this.state.favorites;
         if (favorites) {
             let toPush = [];
@@ -164,8 +185,8 @@ class Dashboard extends Component {
         if (that.state && (that.state.espn1 || that.state.espn2 || that.state.espn3 || that.state.espn4)) {
             const data = this.getAllData();
             if (data.length > 0) {
-                headlines = data.map(function (d) {
-                    return that.createHeadline(d);
+                headlines = data.map(function (d, index) {
+                    return that.createHeadline(d, index);
                 });
             }
         }
@@ -174,19 +195,19 @@ class Dashboard extends Component {
                 <form className="sticky-top">
                     <ul className="breadcrumb">
                         <li className="breadcrumb-item" >
-                            <input id='espn1' type="checkbox" onClick={this.toggleCheckbox} checked={this.state.showEspn1}/>
+                            <input id='espn1' type="checkbox" readOnly={true} onClick={this.toggleCheckbox} checked={this.state.showEspn1}/>
                             <label>MLB</label>
                         </li>
                         <li className="breadcrumb-item" >
-                            <input id='espn2' type="checkbox" onClick={this.toggleCheckbox} checked={this.state.showEspn2}/>
+                            <input id='espn2' type="checkbox" readOnly={true} onClick={this.toggleCheckbox} checked={this.state.showEspn2}/>
                             <label>Motorsports</label>
                         </li>
                         <li className="breadcrumb-item" >
-                            <input id='espn3' type="checkbox" onClick={this.toggleCheckbox} checked={this.state.showEspn3}/>
+                            <input id='espn3' type="checkbox" readOnly={true} onClick={this.toggleCheckbox} checked={this.state.showEspn3}/>
                             <label>College Basketball</label>
                         </li>
                         <li className="breadcrumb-item" >
-                            <input id='espn4' type="checkbox" onClick={this.toggleCheckbox} checked={this.state.showEspn4}/>
+                            <input id='espn4' type="checkbox" readOnly={true} onClick={this.toggleCheckbox} checked={this.state.showEspn4}/>
                             <label>NHL</label>
                         </li>
                     </ul>
